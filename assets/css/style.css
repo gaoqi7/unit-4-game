@@ -1,0 +1,36 @@
+/* .ally {
+    background-color: aquamarine;
+
+} */
+
+.enemy {
+background-color: brown !important;
+}
+
+.playcard {
+    width: 100px;
+    height: 140px;
+    background-color: beige;
+    display:inline-block;
+    text-align: center;
+    margin-right:10px;
+
+}
+.playcard img {
+    width:80px;
+    height:110px;
+}
+
+/* #cardHolder {
+    
+
+} */
+
+.dead {
+    display:none;
+}
+
+.defender{
+    background-color: blue !important;
+}
+
