@@ -2,24 +2,43 @@
     background-color: aquamarine;
 
 } */
+#container{
+    width: 100vw;
+    height:100vh;
+    background-image: url("../images/background-img.jpg");
+    background-size: 100vmax;
+    background-repeat: no-repeat;
+}
+#gameTitle {
+    font-size: 2em;
+    margin-left: 60%;
+    padding-top: 5px;
+    font-family: 'Press Start 2P', cursive;
+}
 
-.enemy {
-background-color: brown !important;
+.ff {
+    font-family: 'VT323', monospace;
+    font-size: 25px;
 }
 
 .playcard {
     width: 100px;
-    height: 140px;
+    height: 145px;
     background-color: beige;
     display:inline-block;
     text-align: center;
     margin-right:10px;
-
+    border: 2px green solid;
 }
 .playcard img {
     width:80px;
     height:110px;
 }
+
+.enemy {
+    background-color: brown !important;
+    border: 2px black solid;
+    }
 
 /* #cardHolder {
     
@@ -31,6 +50,7 @@ background-color: brown !important;
 }
 
 .defender{
-    background-color: blue !important;
+    background-color: aqua !important;
+    border: 2px red solid;
 }
 
