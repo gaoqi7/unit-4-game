@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  //Create object by function
   function character(name, hp, icon, ap, cap) {
     this.name = name;
     this.hp = hp;
@@ -10,12 +11,24 @@ $(document).ready(function() {
   var c2 = new character("Ewok", 180, "assets/images/Ewok.png", 5, 9);
   var c3 = new character("Jawa", 100, "assets/images/Jawa.png", 12, 7);
   var c4 = new character("Yoda", 130, "assets/images/Yoda.png", 7, 8);
+  // Put all the characters(objects) into array.
   var c = [c1, c2, c3, c4];
-
+  //Initialize the Game
+  function initializeGame() {
+    //hide start button after click
+    $("#startBtn").hide();
+    $("#allyCardHolder").empty();
+    $("#enemyCardHolder").empty();
+    $("#gameLog div").empty();
+    x = 1;
+  }
+  //Character on stage
   $("#startBtn").click(function() {
     for (var i = 0; i < c.length; i++) {
       var card = $("<div>");
+      //Build connecting between card and character.
       card.addClass("playcard").attr("index", i);
+      //Create character card
       card.append(
         "<div>" + c[i].name + "</div>",
         "<img src= '" + c[i].icon + "'>",
@@ -23,40 +36,40 @@ $(document).ready(function() {
       );
       $("#cardHolder").append(card);
     }
-    $("#startBtn").hide();
-    $("#allyCardHolder").empty();
-    $("#enemyCardHolder").empty();
-    $("#gameLog div").empty();
-    x = 1;
-  });
 
+    initializeGame();
+  });
+  // Separate ally and enemy by class different. ** append ** automatic move in without copy action.
   $("#cardHolder").on("click", ".playcard", function() {
     $(this).addClass("ally");
     $("#enemyCardHolder").append($(".playcard").not(".ally"));
     $("#allyCardHolder").append(this);
-    // $("#cardHolder").empty();
-    // $("#cardHolder").append(this);
     $(".playcard")
       .not(".ally")
       .addClass("enemy");
-    // $(".playcard:not(.ally)").addClass("enemy");
   });
-
+  // Pick the defender
   $("#enemyCardHolder").on("click", ".enemy", function() {
     $("#defZone").append(this);
     $("#defZone .playcard.enemy").addClass("defender");
     $("#allyCardHolder div")
       .last()
       .replaceWith("<div>" + c[$(".ally").attr("index")].hp + "</div>");
+    // Reset x to 1  = Reset ally's hp and attack point to original state.
     x = 1;
   });
+  //Fighting Part = Math Part
   x = 1;
   $("#attackBtn").click(function() {
     x++;
     var allyCardIndex = $(".ally").attr("index");
     var enemyCardIndex = $("#defZone .playcard.enemy").attr("index");
+    //ally's Hp left after x round fight with defender
     var allyHp = c[allyCardIndex].hp - c[enemyCardIndex].cap * x;
+    //ally's current attacking point
     var allyCurrentAp = c[allyCardIndex].ap * x;
+    //defender's(current enemy's) Hp left after x round fight with ally
+    //defender's hp - the sum of ally's  attacking point
     var enemyHp =
       c[enemyCardIndex].hp - c[allyCardIndex].ap * ((x * (x + 1)) / 2);
     $("#allyCardHolder div")
@@ -96,6 +109,7 @@ $(document).ready(function() {
         .last()
         .empty();
     }
+
     if (enemyHp <= 0) {
       $("#defZone div").addClass("dead");
       $("#startBtn")
