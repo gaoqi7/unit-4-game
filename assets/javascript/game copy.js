@@ -20,7 +20,7 @@ $(document).ready(function() {
     $("#allyCardHolder").empty();
     $("#enemyCardHolder").empty();
     $("#gameLog div").empty();
-    x = 0;
+    x = 1;
   }
   //Character on stage
   $("#startBtn").click(function() {
@@ -36,6 +36,7 @@ $(document).ready(function() {
       );
       $("#cardHolder").append(card);
     }
+
     initializeGame();
   });
   // Separate ally and enemy by class different. ** append ** automatic move in without copy action.
@@ -49,20 +50,19 @@ $(document).ready(function() {
   });
   // Pick the defender
   $("#enemyCardHolder").on("click", ".enemy", function() {
-    if ($("#defZone .defender").length === 0) {
+    if ($("#defZone .playcard.enemy.defender").length === 0) {
       $("#defZone").append(this);
       $("#defZone .playcard.enemy").addClass("defender");
       $("#allyCardHolder div")
         .last()
         .replaceWith("<div>" + c[$(".ally").attr("index")].hp + "</div>");
-      // Reset x to 0  = Reset ally's hp and attack point to original state after the first click.
-      x = 0;
+      // Reset x to 1  = Reset ally's hp and attack point to original state.
+      x = 1;
     }
-    $("#attackBtn").prop("disabled", false);
   });
 
   //Fighting Part = Math Part
-  x = 0;
+  x = 1;
   $("#attackBtn").click(function() {
     x++;
     var allyCardIndex = $(".ally").attr("index");
@@ -101,7 +101,7 @@ $(document).ready(function() {
       );
 
     if (allyHp <= 0) {
-      $("#allyCardHolder").empty();
+      $("#allyCardHolder.ally").addClass("dead");
       $("#gameLog div")
         .first()
         .replaceWith("<div>You been defeated...GAME OVER</div>");
@@ -114,16 +114,17 @@ $(document).ready(function() {
     }
 
     if (enemyHp <= 0) {
-      // if enemy dead, remove card from defZone
-      $("#defZone").empty();
-      $("#attackBtn").prop("disabled", true);
+      $("#defZone div").addClass("dead");
       $("#startBtn")
         .text("RESTART")
         .show();
+      // $("#gameLog div").first().replaceWith("<div>You have defeated " + c[enemyCardIndex].name + ", you can choose to fight with another enemy.</div>");
       $("#gameLog div")
         .last()
         .empty();
-      if ($("#enemyCardHolder div").length === 0) {
+      if (
+        $("#defZone div[class = 'playcard enemy defender dead']").length == 3
+      ) {
         $("#gameLog div")
           .first()
           .replaceWith("<div>You defeated All The Enemy!</div>");

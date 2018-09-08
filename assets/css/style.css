@@ -1,7 +1,6 @@
-/* .ally {
-    background-color: aquamarine;
-
-} */
+body {
+  background-color: rgb(19, 138, 148);
+}
 #container {
   width: 100vw;
   height: 100vh;
@@ -9,6 +8,7 @@
   background-size: 100vmax;
   background-repeat: no-repeat;
 }
+
 #gameTitle {
   font-size: 2em;
   margin-left: 60%;
@@ -40,16 +40,14 @@
   border: 2px black solid;
 }
 
-/* #cardHolder {
-    
-
-} */
-
-.dead {
-  display: none;
-}
-
 .defender {
   background-color: aqua !important;
   border: 2px red solid;
+}
+
+#attackBtn {
+  background-color: red;
+  border-radius: 12px;
+  border: 2px solid #e7e7e7;
+  font-size: 24px;
 }
