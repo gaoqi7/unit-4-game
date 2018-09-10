@@ -2,16 +2,14 @@ body {
   background-color: rgb(19, 138, 148);
 }
 #container {
-  width: 100vw;
-  height: 100vh;
-  background-image: url("../images/background-img.jpg");
-  background-size: 100vmax;
-  background-repeat: no-repeat;
+  width: 960px;
+  height: 960px;
+  margin: 0 auto;
 }
 
 #gameTitle {
   font-size: 2em;
-  margin-left: 60%;
+  margin-left: 50%;
   padding-top: 5px;
   font-family: "Press Start 2P", cursive;
 }
@@ -22,7 +20,8 @@ body {
 }
 
 .playcard {
-  width: 100px;
+  position: relative;
+  width: 145px;
   height: 145px;
   background-color: beige;
   display: inline-block;
@@ -30,11 +29,32 @@ body {
   margin-right: 10px;
   border: 2px green solid;
 }
-.playcard img {
-  width: 80px;
-  height: 110px;
+
+.cardOverlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #4f91f5;
+  opacity: 0;
+  height: inherit;
+  width: inherit;
+  transition: 0.5s ease;
+  text-align: center;
 }
 
+.playcard:hover .cardOverlay {
+  opacity: 0.9;
+}
+
+.playcard img {
+  width: 110px;
+  height: 110px;
+}
+.text {
+  margin-top: 60px;
+}
 .enemy {
   background-color: brown !important;
   border: 2px black solid;
@@ -51,3 +71,14 @@ body {
   border: 2px solid #e7e7e7;
   font-size: 24px;
 }
+
+/* #gameLog {
+  background-color: black;
+  border: 5px gray solid;
+  border-radius: 10px;
+  font-size: 20px;
+  opacity: 0;
+  max-width: 400px;
+  min-height: 50px;
+  color: white;
+} */

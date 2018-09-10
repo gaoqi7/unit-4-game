@@ -1,18 +1,29 @@
 $(document).ready(function() {
   //Create object by function
-  function character(name, hp, icon, ap, cap) {
+  function character(name, hp, ap, cap) {
     this.name = name;
     this.hp = hp;
-    this.icon = icon;
+    this.icon = `assets/images/${this.name}.jpg`;
     this.ap = ap;
     this.cap = cap;
+    //damage output by now
+    this.damageOutputByNow = function(t) {
+      return (this.ap * (t * (t + 1))) / 2;
+    };
   }
-  var c1 = new character("Chewbacca", 150, "assets/images/Chewbacca.png", 9, 6);
-  var c2 = new character("Ewok", 180, "assets/images/Ewok.png", 5, 9);
-  var c3 = new character("Jawa", 100, "assets/images/Jawa.png", 12, 7);
-  var c4 = new character("Yoda", 130, "assets/images/Yoda.png", 7, 8);
+
+  const c1 = new character("chewbacca", 150, 9, 6);
+  const c2 = new character("boba", 180, 5, 9);
+  // const c3 = new character("emperor", 100, 12, 7);
+  const c4 = new character("han", 130, 7, 8);
+  // const c5 = new character("kylo", 150, 9, 6);
+  // const c6 = new character("leia", 180, 5, 9);
+  const c7 = new character("obi", 100, 12, 7);
+  // const c8 = new character("rey", 130, 7, 8);
+  // const c9 = new character("yoda", 130, 7, 8);
+
   // Put all the characters(objects) into array.
-  var c = [c1, c2, c3, c4];
+  const c = [c1, c2, c4, c7];
   //Initialize the Game
   function initializeGame() {
     //hide start button after click
@@ -20,26 +31,32 @@ $(document).ready(function() {
     $("#allyCardHolder").empty();
     $("#enemyCardHolder").empty();
     $("#gameLog div").empty();
+    $("defZone").empty();
     x = 0;
   }
   //Character on stage
   $("#startBtn").click(function() {
-    for (var i = 0; i < c.length; i++) {
-      var card = $("<div>");
+    initializeGame();
+    for (let i = 0; i < c.length; i++) {
+      let card = $("<div>");
       //Build connecting between card and character.
       card.addClass("playcard").attr("index", i);
       //Create character card
       card.append(
-        "<div>" + c[i].name + "</div>",
-        "<img src= '" + c[i].icon + "'>",
-        "<div>" + c[i].hp + "</div>"
+        `<div> ${c[i].name} </div>
+         <img src= "${c[i].icon}">
+         <div>${c[i].hp}</div>
+         <div class="cardOverlay">
+            <div class = "text"> Attack:${c[i].ap}</div>
+            <div> Counter:${c[i].cap}</div>
+         </div>`
       );
       $("#cardHolder").append(card);
     }
-    initializeGame();
   });
   // Separate ally and enemy by class different. ** append ** automatic move in without copy action.
   $("#cardHolder").on("click", ".playcard", function() {
+    $("div.cardOverlay").remove();
     $(this).addClass("ally");
     $("#enemyCardHolder").append($(".playcard").not(".ally"));
     $("#allyCardHolder").append(this);
@@ -54,7 +71,7 @@ $(document).ready(function() {
       $("#defZone .playcard.enemy").addClass("defender");
       $("#allyCardHolder div")
         .last()
-        .replaceWith("<div>" + c[$(".ally").attr("index")].hp + "</div>");
+        .replaceWith(`<div>${c[$(".ally").attr("index")].hp}</div>`);
       // Reset x to 0  = Reset ally's hp and attack point to original state after the first click.
       x = 0;
     }
@@ -74,43 +91,31 @@ $(document).ready(function() {
     //defender's(current enemy's) Hp left after x round fight with ally
     //defender's hp - the sum of ally's  attacking point
     var enemyHp =
-      c[enemyCardIndex].hp - c[allyCardIndex].ap * ((x * (x + 1)) / 2);
-    $("#allyCardHolder div")
-      .last()
-      .replaceWith("<div>" + allyHp + "</div>");
-    $("#defZone div")
-      .last()
-      .replaceWith("<div>" + enemyHp + "</div>");
-    $("#gameLog div")
-      .first()
-      .replaceWith(
-        "<div>You attacked " +
-          c[enemyCardIndex].name +
-          " for " +
-          allyCurrentAp +
-          " damage.</div>"
-      );
-    $("#gameLog div")
-      .last()
-      .replaceWith(
-        "<div>" +
-          c[enemyCardIndex].name +
-          " attacked you back for " +
-          c[enemyCardIndex].cap +
-          " damage.</div>"
-      );
+      // c[enemyCardIndex].hp - c[allyCardIndex].ap * ((x * (x + 1)) / 2);
+      c[enemyCardIndex].hp - c[allyCardIndex].damageOutputByNow(x);
+
+    $("#allyCardHolder div:last").replaceWith(`<div> ${allyHp}</div>`);
+    $("#defZone div:last").replaceWith(`<div> ${enemyHp}</div>`);
+    $("#gameLog div:first").replaceWith(
+      `<div>You attacked ${
+        c[enemyCardIndex].name
+      } for ${allyCurrentAp} damages.</div>`
+    );
+    $("#gameLog div:last").replaceWith(
+      `<div> ${c[enemyCardIndex].name} attacked you back for ${
+        c[enemyCardIndex].cap
+      } damages.</div>`
+    );
 
     if (allyHp <= 0) {
       $("#allyCardHolder").empty();
-      $("#gameLog div")
-        .first()
-        .replaceWith("<div>You been defeated...GAME OVER</div>");
+      $("#gameLog div:first").replaceWith(
+        "<div>You been defeated...GAME OVER</div>"
+      );
       $("#startBtn")
         .text("RESTART")
         .show();
-      $("#gameLog div")
-        .last()
-        .empty();
+      $("#gameLog div:last").empty();
     }
 
     if (enemyHp <= 0) {
@@ -120,21 +125,17 @@ $(document).ready(function() {
       $("#startBtn")
         .text("RESTART")
         .show();
-      $("#gameLog div")
-        .last()
-        .empty();
+      $("#gameLog div:last").empty();
       if ($("#enemyCardHolder div").length === 0) {
-        $("#gameLog div")
-          .first()
-          .replaceWith("<div>You defeated All The Enemy!</div>");
+        $("#gameLog div:first").replaceWith(
+          "<div>You defeated All The Enemy!</div>"
+        );
       } else {
-        $("#gameLog div")
-          .first()
-          .replaceWith(
-            "<div>You have defeated " +
-              c[enemyCardIndex].name +
-              ", you can choose to fight with another enemy.</div>"
-          );
+        $("#gameLog div:first").replaceWith(
+          `<div>You have defeated ${
+            c[enemyCardIndex].name
+          },you can choose to fight with another enemy.</div>`
+        );
       }
     }
   });
