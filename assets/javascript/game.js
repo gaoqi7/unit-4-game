@@ -24,23 +24,30 @@ $(document).ready(function() {
 
   // Put all the characters(objects) into array.
   const c = [c1, c2, c4, c7];
+  var x = 0;
   //Initialize the Game
+
+  $("#content").hide();
+
   function initializeGame() {
     //hide start button after click
     $("#startBtn").hide();
     $("#allyCardHolder").empty();
     $("#enemyCardHolder").empty();
     $("#gameLog div").empty();
-    $("defZone").empty();
+    $("#defZone").empty();
+    $("#attackBtn").hide();
     x = 0;
   }
   //Character on stage
   $("#startBtn").click(function() {
+    $("#startImg").fadeOut(1000);
+    $("#content").fadeIn(2000);
     initializeGame();
     for (let i = 0; i < c.length; i++) {
       let card = $("<div>");
       //Build connecting between card and character.
-      card.addClass("playcard").attr("index", i);
+      card.addClass("playCard").attr("index", i);
       //Create character card
       card.append(
         `<div> ${c[i].name} </div>
@@ -55,23 +62,45 @@ $(document).ready(function() {
     }
   });
   // Separate ally and enemy by class different. ** append ** automatic move in without copy action.
-  $("#cardHolder").on("click", ".playcard", function() {
+  $("#cardHolder").on("click", ".playCard", function() {
+    //remove the AP and CAP display
     $("div.cardOverlay").remove();
-    $(this).addClass("ally");
-    $("#enemyCardHolder").append($(".playcard").not(".ally"));
-    $("#allyCardHolder").append(this);
-    $(".playcard")
+    // Reorder the chosen card to first
+    $(this).insertBefore($("#cardHolder div:first"));
+    // div for vsSymbol
+    let vsSymbol = `<div id = "vsSymbol" class = "playCard">
+                        <img src = "assets/images/vs.png">
+                    </div>`;
+
+    $(this).addClass("ally allyAnimation");
+    $(".playCard")
       .not(".ally")
-      .addClass("enemy");
+      .addClass("enemy enemyAnimation");
+    $(vsSymbol).insertAfter(this);
+    $("#vsSymbol").show(3000, () => {
+      $("#vsSymbol").hide();
+      $(".ally").fadeOut();
+      $(".enemy").fadeOut();
+      $(".ally").removeClass("allyAnimation");
+      $(".enemy").removeClass("enemyAnimation");
+      setTimeout(() => {
+        $("#enemyCardHolder").append($(".playCard").not(".ally"));
+        $("#allyCardHolder").append(this);
+        $(".enemy").fadeIn();
+        $(".ally").fadeIn();
+      }, 800);
+    });
   });
   // Pick the defender
   $("#enemyCardHolder").on("click", ".enemy", function() {
     if ($("#defZone .defender").length === 0) {
+      $("#gameLog div").empty();
       $("#defZone").append(this);
-      $("#defZone .playcard.enemy").addClass("defender");
-      $("#allyCardHolder div")
-        .last()
-        .replaceWith(`<div>${c[$(".ally").attr("index")].hp}</div>`);
+      $("#attackBtn").show();
+      $("#defZone .playCard.enemy").addClass("defender");
+      $("#allyCardHolder div:last").replaceWith(
+        `<div>${c[$(".ally").attr("index")].hp}</div>`
+      );
       // Reset x to 0  = Reset ally's hp and attack point to original state after the first click.
       x = 0;
     }
@@ -79,21 +108,18 @@ $(document).ready(function() {
   });
 
   //Fighting Part = Math Part
-  x = 0;
+  // x = 0;
   $("#attackBtn").click(function() {
     x++;
     var allyCardIndex = $(".ally").attr("index");
-    var enemyCardIndex = $("#defZone .playcard.enemy").attr("index");
+    var enemyCardIndex = $("#defZone .playCard.enemy").attr("index");
     //ally's Hp left after x round fight with defender
     var allyHp = c[allyCardIndex].hp - c[enemyCardIndex].cap * x;
     //ally's current attacking point
     var allyCurrentAp = c[allyCardIndex].ap * x;
     //defender's(current enemy's) Hp left after x round fight with ally
     //defender's hp - the sum of ally's  attacking point
-    var enemyHp =
-      // c[enemyCardIndex].hp - c[allyCardIndex].ap * ((x * (x + 1)) / 2);
-      c[enemyCardIndex].hp - c[allyCardIndex].damageOutputByNow(x);
-
+    var enemyHp = c[enemyCardIndex].hp - c[allyCardIndex].damageOutputByNow(x);
     $("#allyCardHolder div:last").replaceWith(`<div> ${allyHp}</div>`);
     $("#defZone div:last").replaceWith(`<div> ${enemyHp}</div>`);
     $("#gameLog div:first").replaceWith(
@@ -122,19 +148,18 @@ $(document).ready(function() {
       // if enemy dead, remove card from defZone
       $("#defZone").empty();
       $("#attackBtn").prop("disabled", true);
-      $("#startBtn")
-        .text("RESTART")
-        .show();
+
       $("#gameLog div:last").empty();
-      if ($("#enemyCardHolder div").length === 0) {
+      if ($("#enemyCardHolder div").length === 1) {
         $("#gameLog div:first").replaceWith(
           "<div>You defeated All The Enemy!</div>"
         );
       } else {
         $("#gameLog div:first").replaceWith(
-          `<div>You have defeated ${
-            c[enemyCardIndex].name
-          },you can choose to fight with another enemy.</div>`
+          `<div>You have defeated ${c[enemyCardIndex].name},</div>`
+        );
+        $("#gameLog div:last").replaceWith(
+          `<div>you can choose to fight with another enemy.</div>`
         );
       }
     }

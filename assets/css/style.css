@@ -1,25 +1,80 @@
-body {
-  background-color: rgb(19, 138, 148);
-}
+/* body {
+  background-color: rgb(125, 166, 199);
+} */
 #container {
-  width: 960px;
-  height: 960px;
-  margin: 0 auto;
+  display: flex;
+  width: 100vw;
+  /* height: 100vh; */
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  /* background-color: rgb(217, 238, 238); */
+  background-color: rgb(30, 36, 44);
+}
+
+#startImg {
+  display: flex;
+  flex-direction: column;
+  /* background-color: rgb(30, 36, 44); */
+}
+
+#startBtn {
+  background-image: url("../images/startimg.png");
+  background-size: 400px;
+  border: none;
+  width: 400px;
+  height: 400px;
+  outline: none;
+}
+
+#content {
+  display: block;
+  /* background-image: url("../images/contentbg.jpg"); */
+  background-color: rgb(30, 36, 44);
+
+  width: 100vmin;
+  height: 100vmin;
 }
 
 #gameTitle {
-  font-size: 2em;
-  margin-left: 50%;
+  font-size: 3em;
+  margin-left: 30%;
   padding-top: 5px;
-  font-family: "Press Start 2P", cursive;
+  color: white;
+  font-family: "Ruslan Display", cursive;
+}
+
+#cardHolder {
+  display: flex;
+  justify-content: center;
+}
+
+#allyCardHolder {
+  display: flex;
+  justify-content: center;
+}
+
+#enemyCardHolder {
+  display: flex;
+  justify-content: center;
+}
+#defZone {
+  display: flex;
+  justify-content: center;
+}
+#attackBtnHolder {
+  display: flex;
+  justify-content: center;
 }
 
 .ff {
-  font-family: "VT323", monospace;
+  font-family: "Fjalla One", sans-serif;
   font-size: 25px;
+  color: white;
 }
 
-.playcard {
+.playCard {
   position: relative;
   width: 145px;
   height: 145px;
@@ -28,6 +83,43 @@ body {
   text-align: center;
   margin-right: 10px;
   border: 2px green solid;
+}
+
+.allyAnimation {
+  animation-duration: 0.5s;
+  animation-name: ally;
+  transform: perspective(600px) rotateY(45deg);
+}
+
+@keyframes ally {
+  from {
+    transform: perspective(600px) rotateY(0deg);
+  }
+  to {
+    transform: perspective(600px) rotateY(45deg);
+  }
+}
+
+.enemyAnimation {
+  animation-duration: 0.5s;
+  animation-name: enemy;
+  transform: perspective(600px) rotateY(-45deg);
+  margin-right: -42px;
+}
+
+@keyframes enemy {
+  from {
+    transform: perspective(600px) rotateY(0deg);
+  }
+  to {
+    transform: perspective(600px) rotateY(-45deg);
+  }
+}
+
+#vsSymbol {
+  background: none;
+  border: none;
+  display: none;
 }
 
 .cardOverlay {
@@ -40,29 +132,31 @@ body {
   opacity: 0;
   height: inherit;
   width: inherit;
-  transition: 0.5s ease;
+  transition: 0.5s ease-in-out;
   text-align: center;
 }
 
-.playcard:hover .cardOverlay {
+.playCard:hover .cardOverlay {
   opacity: 0.9;
 }
 
-.playcard img {
+.playCard img {
   width: 110px;
   height: 110px;
+  border-radius: 5px;
 }
+
 .text {
   margin-top: 60px;
 }
 .enemy {
-  background-color: brown !important;
+  background-color: rgb(253, 2, 2) !important;
   border: 2px black solid;
 }
 
 .defender {
-  background-color: aqua !important;
-  border: 2px red solid;
+  background-color: rgb(0, 51, 255) !important;
+  border: 2px rgb(255, 234, 0) solid;
 }
 
 #attackBtn {
@@ -72,13 +166,12 @@ body {
   font-size: 24px;
 }
 
-/* #gameLog {
-  background-color: black;
-  border: 5px gray solid;
-  border-radius: 10px;
-  font-size: 20px;
-  opacity: 0;
-  max-width: 400px;
-  min-height: 50px;
-  color: white;
-} */
+#gameLog {
+  margin-top: 10px;
+  flex-basis: 500px;
+  font-family: "Orbitron", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
