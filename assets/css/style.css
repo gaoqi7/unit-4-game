@@ -30,8 +30,9 @@
 
 #content {
   display: block;
-  /* background-image: url("../images/contentbg.jpg"); */
+  background-image: url("../images/bg.jpg");
   background-color: rgb(30, 36, 44);
+  background-repeat: repeat;
 
   width: 100vmin;
   height: 100vmin;
@@ -164,6 +165,7 @@
   border-radius: 12px;
   border: 2px solid #e7e7e7;
   font-size: 24px;
+  outline: none;
 }
 
 #gameLog {

@@ -15,7 +15,7 @@ $(document).ready(function() {
   const c1 = new character("chewbacca", 150, 9, 6);
   const c2 = new character("boba", 180, 5, 9);
   // const c3 = new character("emperor", 100, 12, 7);
-  const c4 = new character("han", 130, 7, 8);
+  const c4 = new character("han", 130, 7, 10);
   // const c5 = new character("kylo", 150, 9, 6);
   // const c6 = new character("leia", 180, 5, 9);
   const c7 = new character("obi", 100, 12, 7);
